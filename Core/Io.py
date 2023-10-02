@@ -141,6 +141,10 @@ fgs_mode_params = [
     Hms.getParameterDef('FAAT2010', True) 
 ]
 
+aocs_state_params = [ 
+    Hms.getParameterDef('APPT0838', True) 
+]
+
 fgs_use_angular_rate_params = [ 
     Hms.getParameterDef('FJJT0247', True) 
 ]
