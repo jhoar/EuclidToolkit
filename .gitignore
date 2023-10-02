@@ -1,0 +1,12 @@
+db/
+exposures
+intervals
+statistics
+plots
+allexp
+nisp
+vis
+visall
+OK
+NOK
+__pycache__/
