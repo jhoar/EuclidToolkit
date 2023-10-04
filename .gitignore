@@ -9,4 +9,8 @@ vis
 visall
 OK
 NOK
+data
+Mosaic/input
+Mosaic/output
+Mosaic/auxiliary/*fits
 __pycache__/
