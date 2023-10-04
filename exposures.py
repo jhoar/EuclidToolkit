@@ -40,7 +40,8 @@ def plot(name: str, pairs: list[list[str]]):
     plt.clf()
 
     nSeries = len(pairs)
-    _, axs = plt.subplots(nSeries, 1, sharex='all')
+    fig, axs = plt.subplots(nSeries, 1, sharex='all')
+    fig.suptitle(str(len(pairs[0][0])) + ' samples')
     for plotnum in range(0, len(pairs)):
         t = pairs[plotnum][0]
         s = pairs[plotnum][1]
@@ -52,8 +53,6 @@ def plot(name: str, pairs: list[list[str]]):
 
     plt.savefig(name, format='png', dpi=300)
     plt.close()
-
-
 
 
 
@@ -78,7 +77,6 @@ def commonTimeline(a_array: ndarray, b_array: ndarray, a_name: str, b_name: str)
         ts[row['POSIX_S']][b_name] = row[b_name]
 
     return ts
-
 
 
 
@@ -162,6 +160,10 @@ def createPlots(in_dir: str, glob: str) -> None:
             time_range = TimeRange(start=start, end=end)
             utc = time_range.start.strftime('%Y-%m-%dT%H:%M:%SZ')
 
+            delta_s = (end - start).total_seconds()
+            if delta_s < 1.0:
+                continue
+
             try:
                 con = Io.load_pointing_error_direct(time_range)
                 fgkf = Io.load_fgs_kalman_direct(time_range)
@@ -216,10 +218,20 @@ def createPlots(in_dir: str, glob: str) -> None:
             Z_DIFF = function(q_off, con, 'DELTA_Q_Z', 'CONT_ERR_Z', sub)
             diffTime = Time(X_DIFF['POSIX_S'].astype(float), format='unix_tai')
 
-            if len(con['CONT_ERR_X']) > 30:
-                xsig.append(25.0 / np.std(con['CONT_ERR_X']))
-                ysig.append(25.0 / np.std(con['CONT_ERR_Y']))
-                zsig.append(500.0 / np.std(con['CONT_ERR_Z']))
+
+            x_sigma = np.std(con['CONT_ERR_X'])
+            y_sigma = np.std(con['CONT_ERR_Y'])
+            z_sigma = np.std(con['CONT_ERR_Z'])
+
+            success = x_sigma < 25.0 and y_sigma < 25.0 and z_sigma < 500
+
+            if len(con['CONT_ERR_X']) > 30 and success:
+                # xsig.append(25.0 / x_sigma)
+                # ysig.append(25.0 / y_sigma)
+                # zsig.append(500.0 / z_sigma)
+                xsig.append(x_sigma)
+                ysig.append(y_sigma)
+                zsig.append(z_sigma)
                 cols.append(len(con['CONT_ERR_X']))
 
             name = str(path.name) + '.png'
@@ -310,7 +322,7 @@ def createPlots(in_dir: str, glob: str) -> None:
     axs[1,0].hist(zsig, bins=nbins)
     axs[1,0].set_title('σ(RPE(CON(Z))) at 500mas')
 
-    scatter = axs[1,1].scatter(xsig, ysig, c=cols, s=np.full(len(xsig), 4), cmap='turbo')
+    scatter = axs[1,1].scatter(xsig, ysig, c=cols, s=np.full(len(xsig), 4), cmap='gist_rainbow')
     divider = make_axes_locatable(axs[1,1])
     cax = divider.append_axes('right', size='5%', pad=0.05)
     plt.colorbar(scatter,cax=cax)
@@ -319,9 +331,6 @@ def createPlots(in_dir: str, glob: str) -> None:
     axs[1,1].set_title('X vs Y, colour(exp_dur)')
 
     plt.savefig('histo_sig.png', format='png', dpi=300)
-
-
-
 
 
 def main() -> int:
@@ -335,7 +344,7 @@ def main() -> int:
     # Read arguments from command line
     args = parser.parse_args()
     
-    in_dir = 'vis'
+    in_dir = 'data'
 
     if args.dir:
         in_dir = args.dir
@@ -353,8 +362,9 @@ def main() -> int:
     if not os.path.exists('plots'):
         os.makedirs('plots', exist_ok=True)
 
-    createPlots(in_dir, 'EUC_AOC_VIS-65716-1-C_20230924T160946.000000Z_01_01_01.00.txt')
-    runAnalysis(in_dir, 'EUC_AOC_VIS-65716-1-C_20230924T160946.000000Z_01_01_01.00.txt')
+
+    createPlots(in_dir, 'EUC_AOC_VIS-*-1-C_*.txt')
+    # runAnalysis(in_dir, 'EUC_AOC_VIS-65744-1-C_20230924T160946.000000Z_01_01_01.00.txt')
 
     return 0
 
