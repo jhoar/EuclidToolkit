@@ -1,0 +1,1181 @@
+{
+    "max_threads": 8,
+    "cosmics_psf_fwhm": 2.5,
+    "cosmics_obj_lim": 8,
+    "daofind_fwhm": 3.0,
+    "daofind_threshold": 500,
+    "daofind_peak_max": 170000,
+    "daofind_sharpness_min": 0.2,
+    "daofind_sharpness_max": 1.05,
+    "daofind_roundness_min": -1.0,
+    "daofind_roundness_max": 1.0,
+    "daofind_brightest": 100,
+    "compute_moments_pix": true,
+    "compute_fwhm": true,
+    "compute_fwhm_pixelated": false,
+    "compute_cramer_rao": true,
+    "compute_cramer_rao_no_ron": false,
+    "compute_eer_pix": true,
+    "compute_aperture_photometry_pix": true,
+    "compute_moments_sky": true,
+    "compute_eer_sky": false,
+    "compute_aperture_photometry_sky": false,
+    "quadrants": {
+        "1-1.E": {
+            "gain": 3.559,
+            "read_out_noise": 3.204,
+            "bias": 2644.84,
+            "ignore": false,
+            "non_linearity": -4.687448591E-8,
+            "qe_698nm": 0.99616
+        },
+        "1-1.F": {
+            "gain": 3.556,
+            "read_out_noise": 3.182,
+            "bias": 2644.96,
+            "ignore": false,
+            "non_linearity": -4.727562016E-8,
+            "qe_698nm": 0.99616
+        },
+        "1-1.G": {
+            "gain": 3.537,
+            "read_out_noise": 3.136,
+            "bias": 2539.43,
+            "ignore": false,
+            "non_linearity": 3.874609624E-9,
+            "qe_698nm": 0.99616
+        },
+        "1-1.H": {
+            "gain": 3.515,
+            "read_out_noise": 3.158,
+            "bias": 2600.33,
+            "ignore": false,
+            "non_linearity": -2.116946718E-8,
+            "qe_698nm": 0.99616
+        },
+        "1-2.E": {
+            "gain": 3.525,
+            "read_out_noise": 3.142,
+            "bias": 2933.83,
+            "ignore": false,
+            "non_linearity": 5.702421762E-9,
+            "qe_698nm": 0.99278
+        },
+        "1-2.F": {
+            "gain": 3.561,
+            "read_out_noise": 3.498,
+            "bias": 2764.55,
+            "ignore": false,
+            "non_linearity": -8.206425014E-8,
+            "qe_698nm": 0.99278
+        },
+        "1-2.G": {
+            "gain": 3.486,
+            "read_out_noise": 3.275,
+            "bias": 2699.25,
+            "ignore": false,
+            "non_linearity": -1.024160523E-7,
+            "qe_698nm": 0.99278
+        },
+        "1-2.H": {
+            "gain": 3.445,
+            "read_out_noise": 3.259,
+            "bias": 2781.73,
+            "ignore": false,
+            "non_linearity": -5.490643361E-9,
+            "qe_698nm": 0.99278
+        },
+        "1-3.E": {
+            "gain": 3.579,
+            "read_out_noise": 3.23,
+            "bias": 2635.02,
+            "ignore": false,
+            "non_linearity": 1.122677836E-7,
+            "qe_698nm": 0.99916
+        },
+        "1-3.F": {
+            "gain": 3.520,
+            "read_out_noise": 3.081,
+            "bias": 2689.14,
+            "ignore": false,
+            "non_linearity": -5.361694873E-8,
+            "qe_698nm": 0.99916
+        },
+        "1-3.G": {
+            "gain": 3.477,
+            "read_out_noise": 3.139,
+            "bias": 2639.57,
+            "ignore": false,
+            "non_linearity": -1.575835234E-8,
+            "qe_698nm": 0.99916
+        },
+        "1-3.H": {
+            "gain": 3.496,
+            "read_out_noise": 3.159,
+            "bias": 2632.18,
+            "ignore": false,
+            "non_linearity": -1.266381032E-8,
+            "qe_698nm": 0.99916
+        },
+        "1-4.E": {
+            "gain": 3.531,
+            "read_out_noise": 3.194,
+            "bias": 2597.19,
+            "ignore": false,
+            "non_linearity": -7.300518018E-8,
+            "qe_698nm": 0.99973
+        },
+        "1-4.F": {
+            "gain": 3.621,
+            "read_out_noise": 3.35,
+            "bias": 2604.73,
+            "ignore": false,
+            "non_linearity": -7.691755536E-8,
+            "qe_698nm": 0.99973
+        },
+        "1-4.G": {
+            "gain": 3.448,
+            "read_out_noise": 3.35,
+            "bias": 2522.58,
+            "ignore": false,
+            "non_linearity": -9.454441212E-8,
+            "qe_698nm": 0.99973
+        },
+        "1-4.H": {
+            "gain": 3.503,
+            "read_out_noise": 3.448,
+            "bias": 2441.67,
+            "ignore": false,
+            "non_linearity": -1.612141177E-7,
+            "qe_698nm": 0.99973
+        },
+        "1-5.E": {
+            "gain": 3.418,
+            "read_out_noise": 3.252,
+            "bias": 2915.19,
+            "ignore": false,
+            "non_linearity": 4.633650305E-9,
+            "qe_698nm": 1.00065
+        },
+        "1-5.F": {
+            "gain": 3.425,
+            "read_out_noise": 3.202,
+            "bias": 2673.82,
+            "ignore": false,
+            "non_linearity": -6.539324094E-8,
+            "qe_698nm": 1.00065
+        },
+        "1-5.G": {
+            "gain": 3.619,
+            "read_out_noise": 3.577,
+            "bias": 2559.56,
+            "ignore": false,
+            "non_linearity": 2.246576159E-7,
+            "qe_698nm": 1.00065
+        },
+        "1-5.H": {
+            "gain": 3.513,
+            "read_out_noise": 3.822,
+            "bias": 2911.75,
+            "ignore": false,
+            "non_linearity": -4.392255676E-8,
+            "qe_698nm": 1.00065
+        },
+        "1-6.E": {
+            "gain": 3.580,
+            "read_out_noise": 3.242,
+            "bias": 2586.18,
+            "ignore": false,
+            "non_linearity": -3.630278494E-8,
+            "qe_698nm": 0.99302
+        },
+        "1-6.F": {
+            "gain": 3.548,
+            "read_out_noise": 3.355,
+            "bias": 2644.32,
+            "ignore": false,
+            "non_linearity": -1.851504288E-7,
+            "qe_698nm": 0.99302
+        },
+        "1-6.G": {
+            "gain": 3.454,
+            "read_out_noise": 3.122,
+            "bias": 2579.01,
+            "ignore": false,
+            "non_linearity": -6.201140149E-8,
+            "qe_698nm": 0.99302
+        },
+        "1-6.H": {
+            "gain": 3.471,
+            "read_out_noise": 3.072,
+            "bias": 2598.23,
+            "ignore": false,
+            "non_linearity": -1.528371273E-7,
+            "qe_698nm": 0.99302
+        },
+        "2-1.E": {
+            "gain": 3.387,
+            "read_out_noise": 3.104,
+            "bias": 2588.54,
+            "ignore": false,
+            "non_linearity": -1.198124686E-7,
+            "qe_698nm": 0.99627
+        },
+        "2-1.F": {
+            "gain": 3.416,
+            "read_out_noise": 3.123,
+            "bias": 2634.51,
+            "ignore": false,
+            "non_linearity": -1.460022791E-7,
+            "qe_698nm": 0.99627
+        },
+        "2-1.G": {
+            "gain": 3.440,
+            "read_out_noise": 3.053,
+            "bias": 2485.93,
+            "ignore": false,
+            "non_linearity": 4.983721367E-8,
+            "qe_698nm": 0.99627
+        },
+        "2-1.H": {
+            "gain": 3.449,
+            "read_out_noise": 3.085,
+            "bias": 2605.7,
+            "ignore": false,
+            "non_linearity": -6.580229358E-8,
+            "qe_698nm": 0.99627
+        },
+        "2-2.E": {
+            "gain": 3.483,
+            "read_out_noise": 3.186,
+            "bias": 2524.27,
+            "ignore": false,
+            "non_linearity": 9.030578254E-8,
+            "qe_698nm": 1.00070
+        },
+        "2-2.F": {
+            "gain": 3.469,
+            "read_out_noise": 3.046,
+            "bias": 2585.57,
+            "ignore": false,
+            "non_linearity": -6.155582782E-8,
+            "qe_698nm": 1.00070
+        },
+        "2-2.G": {
+            "gain": 3.477,
+            "read_out_noise": 3.402,
+            "bias": 2815.32,
+            "ignore": false,
+            "non_linearity": -2.741633556E-8,
+            "qe_698nm": 1.00070
+        },
+        "2-2.H": {
+            "gain": 3.457,
+            "read_out_noise": 3.702,
+            "bias": 2467.6,
+            "ignore": false,
+            "non_linearity": 1.714040177E-8,
+            "qe_698nm": 1.00070
+        },
+        "2-3.E": {
+            "gain": 3.430,
+            "read_out_noise": 3.546,
+            "bias": 2577.24,
+            "ignore": false,
+            "non_linearity": -9.194220467E-8,
+            "qe_698nm": 0.99752
+        },
+        "2-3.F": {
+            "gain": 3.446,
+            "read_out_noise": 3.259,
+            "bias": 2582.97,
+            "ignore": false,
+            "non_linearity": -8.387991085E-8,
+            "qe_698nm": 0.99752
+        },
+        "2-3.G": {
+            "gain": 3.464,
+            "read_out_noise": 3.316,
+            "bias": 2599.89,
+            "ignore": false,
+            "non_linearity": -1.174705461E-7,
+            "qe_698nm": 0.99752
+        },
+        "2-3.H": {
+            "gain": 3.483,
+            "read_out_noise": 3.251,
+            "bias": 2517.57,
+            "ignore": false,
+            "non_linearity": -8.482825568E-9,
+            "qe_698nm": 0.99752
+        },
+        "2-4.E": {
+            "gain": 3.406,
+            "read_out_noise": 3.113,
+            "bias": 2611.05,
+            "ignore": false,
+            "non_linearity": -1.337135818E-8,
+            "qe_698nm": 0.99700
+        },
+        "2-4.F": {
+            "gain": 3.514,
+            "read_out_noise": 3.197,
+            "bias": 2706.26,
+            "ignore": false,
+            "non_linearity": -4.897294819E-8,
+            "qe_698nm": 0.99700
+        },
+        "2-4.G": {
+            "gain": 3.437,
+            "read_out_noise": 3.272,
+            "bias": 2751.21,
+            "ignore": false,
+            "non_linearity": -4.912943118E-8,
+            "qe_698nm": 0.99700
+        },
+        "2-4.H": {
+            "gain": 3.476,
+            "read_out_noise": 3.456,
+            "bias": 2616.39,
+            "ignore": false,
+            "non_linearity": -8.025186123E-8,
+            "qe_698nm": 0.99700
+        },
+        "2-5.E": {
+            "gain": 3.575,
+            "read_out_noise": 3.197,
+            "bias": 2656.79,
+            "ignore": false,
+            "non_linearity": 1.061401731E-7,
+            "qe_698nm": 1.01003
+        },
+        "2-5.F": {
+            "gain": 3.571,
+            "read_out_noise": 3.255,
+            "bias": 2732.57,
+            "ignore": false,
+            "non_linearity": 6.300377766E-8,
+            "qe_698nm": 1.01003
+        },
+        "2-5.G": {
+            "gain": 3.582,
+            "read_out_noise": 3.497,
+            "bias": 2776.44,
+            "ignore": false,
+            "non_linearity": 1.810200596E-7,
+            "qe_698nm": 1.01003
+        },
+        "2-5.H": {
+            "gain": 3.489,
+            "read_out_noise": 3.195,
+            "bias": 2765.73,
+            "ignore": false,
+            "non_linearity": -1.545319288E-8,
+            "qe_698nm": 1.01003
+        },
+        "2-6.E": {
+            "gain": 3.345,
+            "read_out_noise": 3.052,
+            "bias": 2787.67,
+            "ignore": false,
+            "non_linearity": -2.245415168E-8,
+            "qe_698nm": 1.00273
+        },
+        "2-6.F": {
+            "gain": 3.515,
+            "read_out_noise": 3.265,
+            "bias": 2748.68,
+            "ignore": false,
+            "non_linearity": -4.722383008E-8,
+            "qe_698nm": 1.00273
+        },
+        "2-6.G": {
+            "gain": 3.527,
+            "read_out_noise": 3.277,
+            "bias": 2777.1,
+            "ignore": false,
+            "non_linearity": 1.228256671E-7,
+            "qe_698nm": 1.00273
+        },
+        "2-6.H": {
+            "gain": 3.431,
+            "read_out_noise": 3.131,
+            "bias": 2755.58,
+            "ignore": false,
+            "non_linearity": -6.830323767E-9,
+            "qe_698nm": 1.00273
+        },
+        "3-1.E": {
+            "gain": 3.539,
+            "read_out_noise": 3.243,
+            "bias": 3085.65,
+            "ignore": false,
+            "non_linearity": -6.167358019E-8,
+            "qe_698nm": 0.99905
+        },
+        "3-1.F": {
+            "gain": 3.476,
+            "read_out_noise": 3.339,
+            "bias": 2953.11,
+            "ignore": false,
+            "non_linearity": -8.354803353E-8,
+            "qe_698nm": 0.99905
+        },
+        "3-1.G": {
+            "gain": 3.513,
+            "read_out_noise": 3.331,
+            "bias": 2828.51,
+            "ignore": false,
+            "non_linearity": -7.949260793E-8,
+            "qe_698nm": 0.99905
+        },
+        "3-1.H": {
+            "gain": 3.501,
+            "read_out_noise": 3.325,
+            "bias": 3115.22,
+            "ignore": false,
+            "non_linearity": -1.183454975E-7,
+            "qe_698nm": 0.99905
+        },
+        "3-2.E": {
+            "gain": 3.535,
+            "read_out_noise": 3.175,
+            "bias": 2712.86,
+            "ignore": false,
+            "non_linearity": -6.019650122E-8,
+            "qe_698nm": 1.00430
+        },
+        "3-2.F": {
+            "gain": 3.504,
+            "read_out_noise": 3.451,
+            "bias": 2773.84,
+            "ignore": false,
+            "non_linearity": -1.512438873E-7,
+            "qe_698nm": 1.00430
+        },
+        "3-2.G": {
+            "gain": 3.593,
+            "read_out_noise": 3.391,
+            "bias": 2891.67,
+            "ignore": false,
+            "non_linearity": 7.130708137E-8,
+            "qe_698nm": 1.00430
+        },
+        "3-2.H": {
+            "gain": 3.520,
+            "read_out_noise": 3.244,
+            "bias": 2613.36,
+            "ignore": false,
+            "non_linearity": 3.795111601E-9,
+            "qe_698nm": 1.00430
+        },
+        "3-3.E": {
+            "gain": 3.597,
+            "read_out_noise": 3.173,
+            "bias": 2619.31,
+            "ignore": false,
+            "non_linearity": 2.253968160E-7,
+            "qe_698nm": 1.00748
+        },
+        "3-3.F": {
+            "gain": 3.626,
+            "read_out_noise": 3.239,
+            "bias": 2567.04,
+            "ignore": false,
+            "non_linearity": 1.015780297E-7,
+            "qe_698nm": 1.00748
+        },
+        "3-3.G": {
+            "gain": 3.645,
+            "read_out_noise": 3.502,
+            "bias": 2580.02,
+            "ignore": false,
+            "non_linearity": 3.643693724E-7,
+            "qe_698nm": 1.00748
+        },
+        "3-3.H": {
+            "gain": 3.630,
+            "read_out_noise": 3.608,
+            "bias": 2616.54,
+            "ignore": false,
+            "non_linearity": 1.874915186E-7,
+            "qe_698nm": 1.00748
+        },
+        "3-4.E": {
+            "gain": 3.597,
+            "read_out_noise": 3.462,
+            "bias": 2565.57,
+            "ignore": false,
+            "non_linearity": 2.561764530E-7,
+            "qe_698nm": 1.00798
+        },
+        "3-4.F": {
+            "gain": 3.657,
+            "read_out_noise": 3.25,
+            "bias": 2528.27,
+            "ignore": false,
+            "non_linearity": 1.906077662E-7,
+            "qe_698nm": 1.00798
+        },
+        "3-4.G": {
+            "gain": 3.586,
+            "read_out_noise": 3.295,
+            "bias": 2554.01,
+            "ignore": false,
+            "non_linearity": 1.031049994E-7,
+            "qe_698nm": 1.00798
+        },
+        "3-4.H": {
+            "gain": 3.627,
+            "read_out_noise": 3.422,
+            "bias": 2468.88,
+            "ignore": false,
+            "non_linearity": 3.070115978E-7,
+            "qe_698nm": 1.00798
+        },
+        "3-5.E": {
+            "gain": 3.466,
+            "read_out_noise": 3.093,
+            "bias": 2605.89,
+            "ignore": false,
+            "non_linearity": 4.296364500E-8,
+            "qe_698nm": 1.00621
+        },
+        "3-5.F": {
+            "gain": 3.477,
+            "read_out_noise": 3.413,
+            "bias": 2542.2,
+            "ignore": false,
+            "non_linearity": -4.990031360E-8,
+            "qe_698nm": 1.00621
+        },
+        "3-5.G": {
+            "gain": 3.471,
+            "read_out_noise": 3.488,
+            "bias": 2692.23,
+            "ignore": false,
+            "non_linearity": 2.600372706E-8,
+            "qe_698nm": 1.00621
+        },
+        "3-5.H": {
+            "gain": 3.504,
+            "read_out_noise": 3.792,
+            "bias": 2516.16,
+            "ignore": false,
+            "non_linearity": 1.248868590E-7,
+            "qe_698nm": 1.00621
+        },
+        "3-6.E": {
+            "gain": 3.467,
+            "read_out_noise": 3.121,
+            "bias": 2819.5,
+            "ignore": false,
+            "non_linearity": 7.047389398E-9,
+            "qe_698nm": 1.00258
+        },
+        "3-6.F": {
+            "gain": 3.466,
+            "read_out_noise": 3.102,
+            "bias": 2647.25,
+            "ignore": false,
+            "non_linearity": -5.093564726E-8,
+            "qe_698nm": 1.00258
+        },
+        "3-6.G": {
+            "gain": 3.439,
+            "read_out_noise": 2.945,
+            "bias": 2568.22,
+            "ignore": false,
+            "non_linearity": 1.666606366E-8,
+            "qe_698nm": 1.00258
+        },
+        "3-6.H": {
+            "gain": 3.442,
+            "read_out_noise": 3.139,
+            "bias": 2633.6,
+            "ignore": false,
+            "non_linearity": -1.173404694E-7,
+            "qe_698nm": 1.00258
+        },
+        "4-1.E": {
+            "gain": 3.389,
+            "read_out_noise": 3.118,
+            "bias": 2560.8,
+            "ignore": false,
+            "non_linearity": -4.150553124E-8,
+            "qe_698nm": 1.00256
+        },
+        "4-1.F": {
+            "gain": 3.372,
+            "read_out_noise": 3.002,
+            "bias": 2742.83,
+            "ignore": false,
+            "non_linearity": -8.271713550E-8,
+            "qe_698nm": 1.00256
+        },
+        "4-1.G": {
+            "gain": 3.393,
+            "read_out_noise": 3.506,
+            "bias": 2662.69,
+            "ignore": false,
+            "non_linearity": 4.280267395E-8,
+            "qe_698nm": 1.00256
+        },
+        "4-1.H": {
+            "gain": 3.448,
+            "read_out_noise": 3.112,
+            "bias": 2582.83,
+            "ignore": false,
+            "non_linearity": -1.258509403E-8,
+            "qe_698nm": 1.00256
+        },
+        "4-2.E": {
+            "gain": 3.443,
+            "read_out_noise": 3.647,
+            "bias": 2650.74,
+            "ignore": false,
+            "non_linearity": -3.721438053E-10,
+            "qe_698nm": 1.00199
+        },
+        "4-2.F": {
+            "gain": 3.409,
+            "read_out_noise": 3.076,
+            "bias": 2793.42,
+            "ignore": false,
+            "non_linearity": -7.962441750E-9,
+            "qe_698nm": 1.00199
+        },
+        "4-2.G": {
+            "gain": 3.405,
+            "read_out_noise": 3.2,
+            "bias": 2850.59,
+            "ignore": false,
+            "non_linearity": -2.023476979E-8,
+            "qe_698nm": 1.00199
+        },
+        "4-2.H": {
+            "gain": 3.454,
+            "read_out_noise": 3.385,
+            "bias": 2477.7,
+            "ignore": false,
+            "non_linearity": -1.120282291E-8,
+            "qe_698nm": 1.00199
+        },
+        "4-3.E": {
+            "gain": 3.395,
+            "read_out_noise": 3.043,
+            "bias": 2750.39,
+            "ignore": false,
+            "non_linearity": -1.062508603E-8,
+            "qe_698nm": 0.99859
+        },
+        "4-3.F": {
+            "gain": 3.409,
+            "read_out_noise": 3.106,
+            "bias": 2533.42,
+            "ignore": false,
+            "non_linearity": -4.749127368E-8,
+            "qe_698nm": 0.99859
+        },
+        "4-3.G": {
+            "gain": 3.405,
+            "read_out_noise": 3.248,
+            "bias": 2571.17,
+            "ignore": false,
+            "non_linearity": -1.038948806E-7,
+            "qe_698nm": 0.99859
+        },
+        "4-3.H": {
+            "gain": 3.465,
+            "read_out_noise": 3.415,
+            "bias": 2495.03,
+            "ignore": false,
+            "non_linearity": 1.883229648E-9,
+            "qe_698nm": 0.99859
+        },
+        "4-4.E": {
+            "gain": 3.396,
+            "read_out_noise": 3.228,
+            "bias": 2763.48,
+            "ignore": false,
+            "non_linearity": -5.423951303E-8,
+            "qe_698nm": 0.99407
+        },
+        "4-4.F": {
+            "gain": 3.412,
+            "read_out_noise": 3.155,
+            "bias": 2662.86,
+            "ignore": false,
+            "non_linearity": -1.953862533E-7,
+            "qe_698nm": 0.99407
+        },
+        "4-4.G": {
+            "gain": 3.463,
+            "read_out_noise": 3.268,
+            "bias": 2635.42,
+            "ignore": false,
+            "non_linearity": -6.851499211E-8,
+            "qe_698nm": 0.99407
+        },
+        "4-4.H": {
+            "gain": 3.343,
+            "read_out_noise": 3.13,
+            "bias": 2781.13,
+            "ignore": false,
+            "non_linearity": -2.649363882E-7,
+            "qe_698nm": 0.99407
+        },
+        "4-5.E": {
+            "gain": 3.491,
+            "read_out_noise": 3.146,
+            "bias": 2756.1,
+            "ignore": false,
+            "non_linearity": 3.621771362E-9,
+            "qe_698nm": 0.99981
+        },
+        "4-5.F": {
+            "gain": 3.438,
+            "read_out_noise": 3.213,
+            "bias": 2735.85,
+            "ignore": false,
+            "non_linearity": -7.537769434E-8,
+            "qe_698nm": 0.99981
+        },
+        "4-5.G": {
+            "gain": 3.573,
+            "read_out_noise": 3.428,
+            "bias": 2699.63,
+            "ignore": false,
+            "non_linearity": 3.157629338E-7,
+            "qe_698nm": 0.99981
+        },
+        "4-5.H": {
+            "gain": 3.463,
+            "read_out_noise": 3.313,
+            "bias": 2681.11,
+            "ignore": false,
+            "non_linearity": 6.397484066E-8,
+            "qe_698nm": 0.99981
+        },
+        "4-6.E": {
+            "gain": 3.344,
+            "read_out_noise": 3.097,
+            "bias": 2762.06,
+            "ignore": false,
+            "non_linearity": -1.278536177E-7,
+            "qe_698nm": 0.99813
+        },
+        "4-6.F": {
+            "gain": 3.385,
+            "read_out_noise": 2.914,
+            "bias": 2664.37,
+            "ignore": false,
+            "non_linearity": -1.718347585E-7,
+            "qe_698nm": 0.99813
+        },
+        "4-6.G": {
+            "gain": 3.498,
+            "read_out_noise": 3.355,
+            "bias": 2515.27,
+            "ignore": false,
+            "non_linearity": 1.659720275E-7,
+            "qe_698nm": 0.99813
+        },
+        "4-6.H": {
+            "gain": 3.378,
+            "read_out_noise": 3.851,
+            "bias": 2679.77,
+            "ignore": false,
+            "non_linearity": -1.279930001E-7,
+            "qe_698nm": 0.99813
+        },
+        "5-1.E": {
+            "gain": 3.526,
+            "read_out_noise": 3.257,
+            "bias": 2962.86,
+            "ignore": false,
+            "non_linearity": 2.364473733E-8,
+            "qe_698nm": 0.99910
+        },
+        "5-1.F": {
+            "gain": 3.484,
+            "read_out_noise": 3.107,
+            "bias": 3070.06,
+            "ignore": false,
+            "non_linearity": -9.277074543E-8,
+            "qe_698nm": 0.99910
+        },
+        "5-1.G": {
+            "gain": 3.534,
+            "read_out_noise": 3.552,
+            "bias": 2874.48,
+            "ignore": false,
+            "non_linearity": 3.467829512E-8,
+            "qe_698nm": 0.99910
+        },
+        "5-1.H": {
+            "gain": 3.480,
+            "read_out_noise": 3.492,
+            "bias": 3109.68,
+            "ignore": false,
+            "non_linearity": -1.278136383E-8,
+            "qe_698nm": 0.99910
+        },
+        "5-2.E": {
+            "gain": 3.517,
+            "read_out_noise": 3.213,
+            "bias": 3004.65,
+            "ignore": false,
+            "non_linearity": -1.063770803E-9,
+            "qe_698nm": 0.99960
+        },
+        "5-2.F": {
+            "gain": 3.456,
+            "read_out_noise": 3.262,
+            "bias": 2765.0,
+            "ignore": false,
+            "non_linearity": -1.505073072E-7,
+            "qe_698nm": 0.99960
+        },
+        "5-2.G": {
+            "gain": 3.559,
+            "read_out_noise": 3.296,
+            "bias": 2800.68,
+            "ignore": false,
+            "non_linearity": 9.724677843E-8,
+            "qe_698nm": 0.99960
+        },
+        "5-2.H": {
+            "gain": 3.556,
+            "read_out_noise": 3.504,
+            "bias": 2906.2,
+            "ignore": false,
+            "non_linearity": -3.212680116E-8,
+            "qe_698nm": 0.99960
+        },
+        "5-3.E": {
+            "gain": 3.665,
+            "read_out_noise": 3.199,
+            "bias": 2595.29,
+            "ignore": false,
+            "non_linearity": 3.567781243E-7,
+            "qe_698nm": 1.00630
+        },
+        "5-3.F": {
+            "gain": 3.679,
+            "read_out_noise": 3.319,
+            "bias": 2539.01,
+            "ignore": false,
+            "non_linearity": 2.091573386E-7,
+            "qe_698nm": 1.00630
+        },
+        "5-3.G": {
+            "gain": 3.586,
+            "read_out_noise": 2.991,
+            "bias": 2572.52,
+            "ignore": false,
+            "non_linearity": 1.268996740E-7,
+            "qe_698nm": 1.00630
+        },
+        "5-3.H": {
+            "gain": 3.493,
+            "read_out_noise": 3.084,
+            "bias": 2703.64,
+            "ignore": false,
+            "non_linearity": 2.116416515E-8,
+            "qe_698nm": 1.00630
+        },
+        "5-4.E": {
+            "gain": 3.553,
+            "read_out_noise": 3.138,
+            "bias": 2579.45,
+            "ignore": false,
+            "non_linearity": 2.704976054E-7,
+            "qe_698nm": 1.00086
+        },
+        "5-4.F": {
+            "gain": 3.501,
+            "read_out_noise": 3.138,
+            "bias": 2751.85,
+            "ignore": false,
+            "non_linearity": 3.768607768E-8,
+            "qe_698nm": 1.00086
+        },
+        "5-4.G": {
+            "gain": 3.627,
+            "read_out_noise": 3.516,
+            "bias": 2602.52,
+            "ignore": false,
+            "non_linearity": 1.038620398E-7,
+            "qe_698nm": 1.00086
+        },
+        "5-4.H": {
+            "gain": 3.556,
+            "read_out_noise": 3.418,
+            "bias": 2615.27,
+            "ignore": false,
+            "non_linearity": 2.801240380E-9,
+            "qe_698nm": 1.00086
+        },
+        "5-5.E": {
+            "gain": 3.583,
+            "read_out_noise": 3.241,
+            "bias": 2896.55,
+            "ignore": false,
+            "non_linearity": 2.648994728E-8,
+            "qe_698nm": 0.99252
+        },
+        "5-5.F": {
+            "gain": 3.566,
+            "read_out_noise": 3.305,
+            "bias": 2677.28,
+            "ignore": false,
+            "non_linearity": -8.688198058E-8,
+            "qe_698nm": 0.99252
+        },
+        "5-5.G": {
+            "gain": 3.529,
+            "read_out_noise": 3.309,
+            "bias": 2620.0,
+            "ignore": false,
+            "non_linearity": -9.486369001E-8,
+            "qe_698nm": 0.99252
+        },
+        "5-5.H": {
+            "gain": 3.545,
+            "read_out_noise": 3.24,
+            "bias": 2718.46,
+            "ignore": false,
+            "non_linearity": -1.189275932E-7,
+            "qe_698nm": 0.99252
+        },
+        "5-6.E": {
+            "gain": 3.498,
+            "read_out_noise": 3.186,
+            "bias": 2671.4,
+            "ignore": false,
+            "non_linearity": 3.509270754E-8,
+            "qe_698nm": 1.00143
+        },
+        "5-6.F": {
+            "gain": 3.567,
+            "read_out_noise": 3.152,
+            "bias": 2643.92,
+            "ignore": false,
+            "non_linearity": 5.342135582E-8,
+            "qe_698nm": 1.00143
+        },
+        "5-6.G": {
+            "gain": 3.585,
+            "read_out_noise": 3.322,
+            "bias": 2800.46,
+            "ignore": false,
+            "non_linearity": 3.156112207E-8,
+            "qe_698nm": 1.00143
+        },
+        "5-6.H": {
+            "gain": 3.540,
+            "read_out_noise": 3.387,
+            "bias": 2543.4,
+            "ignore": false,
+            "non_linearity": 5.232700507E-8,
+            "qe_698nm": 1.00143
+        },
+        "6-1.E": {
+            "gain": 3.500,
+            "read_out_noise": 3.174,
+            "bias": 2808.52,
+            "ignore": false,
+            "non_linearity": 3.917329730E-8,
+            "qe_698nm": 1.00132
+        },
+        "6-1.F": {
+            "gain": 3.444,
+            "read_out_noise": 3.316,
+            "bias": 2843.88,
+            "ignore": false,
+            "non_linearity": -1.673053345E-8,
+            "qe_698nm": 1.00132
+        },
+        "6-1.G": {
+            "gain": 3.541,
+            "read_out_noise": 3.462,
+            "bias": 2855.21,
+            "ignore": false,
+            "non_linearity": 6.431588091E-8,
+            "qe_698nm": 1.00132
+        },
+        "6-1.H": {
+            "gain": 3.578,
+            "read_out_noise": 3.577,
+            "bias": 2783.18,
+            "ignore": false,
+            "non_linearity": 8.360217360E-8,
+            "qe_698nm": 1.00132
+        },
+        "6-2.E": {
+            "gain": 3.578,
+            "read_out_noise": 3.227,
+            "bias": 2653.47,
+            "ignore": false,
+            "non_linearity": 8.724453683E-8,
+            "qe_698nm": 0.99671
+        },
+        "6-2.F": {
+            "gain": 3.582,
+            "read_out_noise": 3.538,
+            "bias": 2644.06,
+            "ignore": false,
+            "non_linearity": -5.029757893E-8,
+            "qe_698nm": 0.99671
+        },
+        "6-2.G": {
+            "gain": 3.548,
+            "read_out_noise": 3.247,
+            "bias": 2719.57,
+            "ignore": false,
+            "non_linearity": 5.876199280E-9,
+            "qe_698nm": 0.99671
+        },
+        "6-2.H": {
+            "gain": 3.577,
+            "read_out_noise": 3.325,
+            "bias": 2684.42,
+            "ignore": false,
+            "non_linearity": -6.218040944E-8,
+            "qe_698nm": 0.99671
+        },
+        "6-3.E": {
+            "gain": 3.572,
+            "read_out_noise": 3.486,
+            "bias": 2957.62,
+            "ignore": false,
+            "non_linearity": 3.521998545E-8,
+            "qe_698nm": 0.99261
+        },
+        "6-3.F": {
+            "gain": 3.535,
+            "read_out_noise": 3.151,
+            "bias": 3141.71,
+            "ignore": false,
+            "non_linearity": -7.541013547E-8,
+            "qe_698nm": 0.99261
+        },
+        "6-3.G": {
+            "gain": 3.509,
+            "read_out_noise": 3.167,
+            "bias": 3074.31,
+            "ignore": false,
+            "non_linearity": -1.406439034E-7,
+            "qe_698nm": 0.99261
+        },
+        "6-3.H": {
+            "gain": 3.491,
+            "read_out_noise": 3.13,
+            "bias": 2879.18,
+            "ignore": false,
+            "non_linearity": -1.389761775E-7,
+            "qe_698nm": 0.99261
+        },
+        "6-4.E": {
+            "gain": 3.440,
+            "read_out_noise": 3.109,
+            "bias": 2477.31,
+            "ignore": false,
+            "non_linearity": -9.514916474E-8,
+            "qe_698nm": 0.99479
+        },
+        "6-4.F": {
+            "gain": 3.365,
+            "read_out_noise": 3.065,
+            "bias": 2732.09,
+            "ignore": false,
+            "non_linearity": -1.282495793E-7,
+            "qe_698nm": 0.99479
+        },
+        "6-4.G": {
+            "gain": 3.436,
+            "read_out_noise": 3.116,
+            "bias": 2727.76,
+            "ignore": false,
+            "non_linearity": -6.755198086E-8,
+            "qe_698nm": 0.99479
+        },
+        "6-4.H": {
+            "gain": 3.459,
+            "read_out_noise": 3.497,
+            "bias": 2413.89,
+            "ignore": false,
+            "non_linearity": 2.039622347E-8,
+            "qe_698nm": 0.99479
+        },
+        "6-5.E": {
+            "gain": 3.525,
+            "read_out_noise": 3.334,
+            "bias": 2853.84,
+            "ignore": false,
+            "non_linearity": 4.588552244E-9,
+            "qe_698nm": 0.99641
+        },
+        "6-5.F": {
+            "gain": 3.479,
+            "read_out_noise": 3.393,
+            "bias": 2858.74,
+            "ignore": false,
+            "non_linearity": -1.035637172E-7,
+            "qe_698nm": 0.99641
+        },
+        "6-5.G": {
+            "gain": 3.453,
+            "read_out_noise": 3.232,
+            "bias": 2623.53,
+            "ignore": false,
+            "non_linearity": -7.975854370E-8,
+            "qe_698nm": 0.99641
+        },
+        "6-5.H": {
+            "gain": 3.463,
+            "read_out_noise": 3.225,
+            "bias": 2858.82,
+            "ignore": false,
+            "non_linearity": -1.038194375E-9,
+            "qe_698nm": 0.99641
+        },
+        "6-6.E": {
+            "gain": 3.673,
+            "read_out_noise": 3.614,
+            "bias": 2757.79,
+            "ignore": false,
+            "non_linearity": 4.243206921E-7,
+            "qe_698nm": 1.00995
+        },
+        "6-6.F": {
+            "gain": 3.599,
+            "read_out_noise": 3.319,
+            "bias": 2770.78,
+            "ignore": false,
+            "non_linearity": 1.761775494E-7,
+            "qe_698nm": 1.00995
+        },
+        "6-6.G": {
+            "gain": 3.563,
+            "read_out_noise": 3.216,
+            "bias": 2977.95,
+            "ignore": false,
+            "non_linearity": 8.348771617E-8,
+            "qe_698nm": 1.00995
+        },
+        "6-6.H": {
+            "gain": 3.636,
+            "read_out_noise": 3.328,
+            "bias": 2591.97,
+            "ignore": false,
+            "non_linearity": 1.095348705E-7,
+            "qe_698nm": 1.00995
+        }
+    },
+    "determined_fwhm_scale_factor": 1.3,
+    "quadrupole_moment_sigma_threshold": 1.0,
+    "eer_recenter": false,
+    "file_name": null
+}
