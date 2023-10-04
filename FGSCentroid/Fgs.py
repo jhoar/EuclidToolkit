@@ -8,7 +8,7 @@ import astropy.units as u
 import numpy as np
 from scipy.stats import linregress
 
-from Utilities import ndarray_to_list
+from Core.Utilities import ndarray_to_list
 
 #
 #

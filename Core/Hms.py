@@ -8,7 +8,7 @@ urlsuffix = '&aggregationFunction=FIRST&aggregation=None&aggregationValue=1&comp
 
             # "&aggregationFunction=FIRST&aggregation=None&aggregationValue=1&compressionError=0&chunkCount=1749&delta=0"
 
-from Utilities import _ROOT    
+from Core.Utilities import _ROOT    
     
 class ParamDefKeywords: 
     name: str = 'param'
