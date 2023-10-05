@@ -32,6 +32,9 @@ from photutils.aperture import aperture_photometry, CircularAperture, CircularAn
 from scipy import optimize
 from scipy.special import ellipe, roots_legendre
 
+from skimage.transform import downscale_local_mean
+from PIL import Image, ImageOps
+
 from cramer_rao import get_psf_centroid_location_precision, get_psf_circular_mask
 
 # Constants
@@ -109,6 +112,9 @@ FITS_FILE_REGEX = re.compile('.[fF][iI][tT][sS]\\b')
 
 FITS_FILE_EXTENSION = '.fits'
 """The standard fits file name extension. Used in batch processing."""
+
+PNG_FILE_EXTENSION = '.png'
+"""The standard PNG file name extension. Used in batch processing."""
 
 ASTROMETRY_NET_XMATCH_FITS_FILE_EXTENSION = '.corr'
 """The standard fits file name extension. Used in batch processing."""
@@ -1321,7 +1327,19 @@ def clean_cosmics_vis_hdu_list(vis_hdu_list: VisHDUList, vis_processing_config: 
     # TODO CCD_SATURATION_LEVEL by configuration parameter?
     # TODO verify all mask values in CCD processing consistent with Ralf values
 
-def mosaic_vis_hdu_list(vis_hdu_list: VisHDUList) -> fits.PrimaryHDU:
+def thumb_vis_hdu_list(vis_hdu_list: VisHDUList) -> list[Image.Image]:
+    """
+    Generate a thumbnail
+    :param vis_hdu_list: the input VIS hdu_list. It will not be modified.
+    """
+
+    data = downscale_local_mean(vis_hdu_list.hdu_list[1].data, (20, 20))
+    img = Image.fromarray(data).convert("L")
+    im = ImageOps.colorize(img, (0,0,128), (128,0,0), (240,240,200))
+
+    return [im]
+
+def mosaic_vis_hdu_list(vis_hdu_list: VisHDUList) -> fits.HDUList:
     """
     Generate a mosaic
     :param vis_hdu_list: the input VIS hdu_list. It will not be modified.
@@ -1342,7 +1360,12 @@ def mosaic_vis_hdu_list(vis_hdu_list: VisHDUList) -> fits.PrimaryHDU:
 
         mosaic_image[target_x_0:target_x_1, target_y_0:target_y_1] = hdu.data
 
-    return fits.PrimaryHDU(mosaic_image, vis_hdu_list.hdu_list[0].header)
+        hdu_list = fits.HDUList(fits.PrimaryHDU(header=vis_hdu_list.hdu_list[0].header))
+        hdu_list.append(fits.ImageHDU(mosaic_image))
+        hdu_list.update_extend()
+
+    return hdu_list
+
 
 def detect_stars_quadrant(input_array: np.ndarray, mask: np.ndarray = None,
                           starfinderbase: StarFinderBase = DAOStarFinder, starfinderbase_args: Dict = {}) -> Table:
@@ -2251,6 +2274,7 @@ class FileProcessingStep(Enum):
     IMAGE_QUALITY = auto()
     MOSAIC = auto()
     MOSAIC_CLEAN = auto()
+    THUMB = auto()
 
 
 @dataclass()
@@ -2354,6 +2378,10 @@ class VisFileProcessor:
             self._vis_hdu_list_from_fits(self.output_folder, COSMICS_CLEANED_FILE_SUFFIX)
             self.vis_stars = None
             self.vis_cutouts = None
+        elif file_processing_step is FileProcessingStep.THUMB:
+            self._vis_hdu_list_from_fits(self.output_folder, MOSAIC_FILE_SUFFIX)
+            self.vis_stars = None
+            self.vis_cutouts = None
         else:
             raise TypeError(f'Unsupported file processing step: {file_processing_step}')
         return time.time_ns() - now
@@ -2455,6 +2483,17 @@ class VisFileProcessor:
                 self.output_folder, f'{self.prefix}{MOSAIC_FILE_SUFFIX}{FITS_FILE_EXTENSION}')
             output_hdu.writeto(output_file, overwrite=True)
 
+    def _thumb(self):
+        output_images = thumb_vis_hdu_list(self.vis_hdu_list)
+        self.vis_stars = None
+        self.vis_cutouts = None
+
+        if self.write_output_files:
+            output_file = os.path.join(
+                self.output_folder, f'{self.prefix}{MOSAIC_FILE_SUFFIX}{PNG_FILE_EXTENSION}')
+            output_images[0].save(output_file, overwrite=True)
+
+
     def process(self, file_processing_step: FileProcessingStep) -> int:
         """
         Apply one processing step. Internal buffers will be overwritten. Output files might be generated.
@@ -2476,6 +2515,8 @@ class VisFileProcessor:
             self._image_quality_diagnostics()
         elif file_processing_step is FileProcessingStep.MOSAIC or file_processing_step is FileProcessingStep.MOSAIC_CLEAN:
             self._mosaic()
+        elif file_processing_step is FileProcessingStep.THUMB:
+            self._thumb()
         else:
             raise TypeError(f'Unsupported file processing step: {file_processing_step}')
         return time.time_ns() - now

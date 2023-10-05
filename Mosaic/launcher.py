@@ -38,7 +38,7 @@ args = parser.parse_args()
 
 # Verify all processing steps are valid. Exit if not
 valid_file_processing_steps = {
-    'CCD_PROCESSING', 'COSMICS_CLEANING', 'FWHM_DETERMINATION', 'SOURCES_DETECTION', 'ASTROMETRY', 'IMAGE_QUALITY', 'MOSAIC', 'MOSAIC_CLEAN'}
+    'CCD_PROCESSING', 'COSMICS_CLEANING', 'FWHM_DETERMINATION', 'SOURCES_DETECTION', 'ASTROMETRY', 'IMAGE_QUALITY', 'MOSAIC', 'MOSAIC_CLEAN', 'THUMB'}
 if not valid_file_processing_steps.issuperset(args.step):
     exit_string = f'Invalid processing steps: {set(args.step).difference(valid_file_processing_steps)}'
     logging.critical(exit_string)
