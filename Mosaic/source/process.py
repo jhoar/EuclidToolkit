@@ -384,9 +384,6 @@ IMAGE_QUALITY_FILE_SUFFIX = '_image_quality'
 MOSAIC_FILE_SUFFIX = '_mosaic'
 """The suffix to be added before the extension to image quality diagnostic source table files."""
 
-MOSAIC_CLEAN_FILE_SUFFIX = '_mosaic_clean'
-"""The suffix to be added before the extension to image quality diagnostic source table files."""
-
 
 @dataclass(frozen=True)
 class QuadrantLocationData:
@@ -2295,7 +2292,6 @@ class VisFileProcessor:
         if input_folder is None:
             input_folder = self.input_folder
         input_file = os.path.join(input_folder, f'{self.prefix}{suffix}{FITS_FILE_EXTENSION}')
-        logging.info('I have found this file ' + input_file)
         self.vis_hdu_list = VisHDUList.from_fits(input_file)
         return time.time_ns() - now
 
@@ -2449,15 +2445,14 @@ class VisFileProcessor:
                 self.output_folder, f'{self.prefix}{IMAGE_QUALITY_FILE_SUFFIX}{FITS_FILE_EXTENSION}')
             self.vis_stars.to_fits(output_file)
 
-    def _mosaic(self, suffix: str):
-        logging.info(f'Running MOSAIC with {suffix}')
+    def _mosaic(self):
         output_hdu = mosaic_vis_hdu_list(self.vis_hdu_list)
         self.vis_stars = None
         self.vis_cutouts = None
 
         if self.write_output_files:
             output_file = os.path.join(
-                self.output_folder, f'{self.prefix}{suffix}{FITS_FILE_EXTENSION}')
+                self.output_folder, f'{self.prefix}{MOSAIC_FILE_SUFFIX}{FITS_FILE_EXTENSION}')
             output_hdu.writeto(output_file, overwrite=True)
 
     def process(self, file_processing_step: FileProcessingStep) -> int:
@@ -2479,10 +2474,8 @@ class VisFileProcessor:
             self._astrometric_reduction()
         elif file_processing_step is FileProcessingStep.IMAGE_QUALITY:
             self._image_quality_diagnostics()
-        elif file_processing_step is FileProcessingStep.MOSAIC:
-            self._mosaic(MOSAIC_FILE_SUFFIX)
-        elif file_processing_step is FileProcessingStep.MOSAIC_CLEAN:
-            self._mosaic(MOSAIC_CLEAN_FILE_SUFFIX)
+        elif file_processing_step is FileProcessingStep.MOSAIC or file_processing_step is FileProcessingStep.MOSAIC_CLEAN:
+            self._mosaic()
         else:
             raise TypeError(f'Unsupported file processing step: {file_processing_step}')
         return time.time_ns() - now
