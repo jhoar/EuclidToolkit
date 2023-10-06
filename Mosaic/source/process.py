@@ -1335,9 +1335,10 @@ def thumb_vis_hdu_list(vis_hdu_list: VisHDUList) -> list[Image.Image]:
 
     data = downscale_local_mean(vis_hdu_list.hdu_list[1].data, (20, 20))
     img = Image.fromarray(data).convert("L")
-    im = ImageOps.colorize(img, (0,0,128), (128,0,0), (240,240,200))
+    img = ImageOps.colorize(img, (0,0,128), (128,0,0), (240,240,200))
+    trans = img.transpose(Image.FLIP_TOP_BOTTOM)
 
-    return [im]
+    return [trans]
 
 def mosaic_vis_hdu_list(vis_hdu_list: VisHDUList) -> fits.HDUList:
     """
