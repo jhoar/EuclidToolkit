@@ -1352,13 +1352,13 @@ def mosaic_vis_hdu_list(vis_hdu_list: VisHDUList) -> fits.HDUList:
         # Get the trim sizes
         y_min, _, x_min, _ = QUADRANT_TO_QUADRANT_LOCATION[quadrant].get_numpy_trim_range()
 
-        target_x_0 = int(MOSAIC_NAXIS2 / 2 - hdu.header['CRPIX2']) + y_min
-        target_y_0 = int(MOSAIC_NAXIS1 / 2 - hdu.header['CRPIX1']) + x_min
+        target_y_0 = int(MOSAIC_NAXIS2 / 2 - hdu.header['CRPIX2']) + y_min
+        target_x_0 = int(MOSAIC_NAXIS1 / 2 - hdu.header['CRPIX1']) + x_min
 
-        target_x_1 = target_x_0 + len(hdu.data)
-        target_y_1 = target_y_0 + len(hdu.data[0])
+        target_y_1 = target_y_0 + len(hdu.data)
+        target_x_1 = target_x_0 + len(hdu.data[0])
 
-        mosaic_image[target_x_0:target_x_1, target_y_0:target_y_1] = hdu.data
+        mosaic_image[target_y_0:target_y_1, target_x_0:target_x_1] = hdu.data
 
         hdu_list = fits.HDUList(fits.PrimaryHDU(header=vis_hdu_list.hdu_list[0].header))
         hdu_list.append(fits.ImageHDU(mosaic_image))
