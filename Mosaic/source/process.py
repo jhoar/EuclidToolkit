@@ -55,11 +55,11 @@ QUADRANT_NAXIS_1 = 2128
 QUADRANT_NAXIS_2 = 2086
 """Number of samples per quadrant in Y parallel direction."""
 
-MOSAIC_NAXIS1  =                25186
-"""Number of pixels in mosaic Y direction"""
-
-MOSAIC_NAXIS2  =                27966    
+MOSAIC_NAXIS1 = 25186
 """Number of pixels in mosaic X direction"""
+
+MOSAIC_NAXIS2 = 27966    
+"""Number of pixels in mosaic Y direction"""
 
 PRESCAN_X = 51
 """Number of serial   prescan  pixels."""
