@@ -74,8 +74,8 @@ for arg, value in vars(args).items():
     logging.info(f'Command line argument {arg}: {value}')
 
 # Subprocess python method call
-method_call = ['python', '-c', f'import sys; sys.path.append("{args.source}"); import process; ' \
-  f'process.process_vis_files("{args.input}", "{args.output}", {prefixes_string}, {steps_string}, '\
+method_call = ['python', '-c', f'import sys; sys.path.append("{args.source}"); import vis; ' \
+  f'vis.process_vis_files("{args.input}", "{args.output}", {prefixes_string}, {steps_string}, '\
   f'"{args.output}/{vis_file_processing_log}", "{args.aux}/{args.config}", "{args.aux}/{args.indices}", '\
   f'"{args.aux}/{args.dark}", "{args.aux}/{args.flat}", {not args.memory})']
 logging.info(f'Method call: {method_call}')

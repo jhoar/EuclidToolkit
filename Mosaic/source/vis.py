@@ -38,7 +38,7 @@ from PIL import Image, ImageOps
 from cramer_rao import get_psf_centroid_location_precision, get_psf_circular_mask
 
 # Constants
-VERSION = 1.1
+VERSION = 1.2
 """The module version"""
 
 NUM_CORES = psutil.cpu_count(False)
