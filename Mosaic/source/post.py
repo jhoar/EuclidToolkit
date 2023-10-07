@@ -47,10 +47,6 @@ FITS_FILE_EXTENSION = '.fits'
 PNG_FILE_EXTENSION = '.png'
 """The standard PNG file name extension. Used in batch processing."""
 
-MOSAIC_FILE_SUFFIX = '_mosaic'
-"""The suffix to be added before the extension to image quality diagnostic source table files."""
-
-
 def colorise(image, black, white, mid=None, blackpoint=1, whitepoint=255, midpoint=127):
     """
     Colorize grayscale image.
@@ -137,7 +133,14 @@ def colorise(image, black, white, mid=None, blackpoint=1, whitepoint=255, midpoi
     return ImageOps._lut(image, red + green + blue)
 
 
+@dataclass
+class ImageContainer:
+    """Handles PIL image files"""
 
+    image: Image.Image
+    """The PIL image object"""
+    name: str
+    """(partial) name of the Image"""
 
 @dataclass
 class PostProcessingConfig:
@@ -228,7 +231,7 @@ class HDUList:
             return cls(hdu_list, file_name)
 
 
-def thumb_hdu_list(hdu_list: HDUList, post_processing_config: PostProcessingConfig) -> list[Image.Image]:
+def thumb_hdu_list(hdu_list: HDUList, post_processing_config: PostProcessingConfig) -> list[ImageContainer]:
     """
     Generate a thumbnail
     :param hdu_list: the input hdu_list. It will not be modified.
@@ -237,7 +240,7 @@ def thumb_hdu_list(hdu_list: HDUList, post_processing_config: PostProcessingConf
     imgs = []
 
     for idx in range(1, len(hdu_list.hdu_list)):
-        logging.info(f'Processing extension {idx}')
+        logging.info(f'Processing extension {hdu_list.hdu_list[idx].name}')
         data = downscale_local_mean(hdu_list.hdu_list[idx].data, 
                                     (post_processing_config.reduction_factor, 
                                     post_processing_config.reduction_factor))
@@ -246,7 +249,9 @@ def thumb_hdu_list(hdu_list: HDUList, post_processing_config: PostProcessingConf
                     post_processing_config.low_color, 
                     post_processing_config.mid_color, 
                     post_processing_config.high_color)
-        imgs.append(img.transpose(Image.FLIP_TOP_BOTTOM))
+        flipped = img.transpose(Image.FLIP_TOP_BOTTOM)
+
+        imgs.append(ImageContainer(flipped, hdu_list.hdu_list[idx].name))
 
     return imgs
 
@@ -299,20 +304,22 @@ class PostProcessor:
         """
         now = time.time_ns()
         if file_processing_step is FileProcessingStep.THUMB:
-            self._hdu_list_from_fits(self.output_folder, MOSAIC_FILE_SUFFIX)
+            self._hdu_list_from_fits(self.output_folder)
         else:
             raise TypeError(f'Unsupported file processing step: {file_processing_step}')
         return time.time_ns() - now
 
     def _thumb(self):
         output_images = thumb_hdu_list(self.vis_hdu_list, self.post_processing_config)
-        self.vis_stars = None
-        self.vis_cutouts = None
 
         if self.write_output_files:
-            output_file = os.path.join(
-                self.output_folder, f'{self.prefix}{MOSAIC_FILE_SUFFIX}{PNG_FILE_EXTENSION}')
-            output_images[0].save(output_file, overwrite=True)
+            for image_container in output_images:
+                output_file = os.path.join(
+                    self.output_folder, f'{self.prefix}_{image_container.name}{PNG_FILE_EXTENSION}')
+
+                image_container.image.save(output_file, overwrite=True)
+
+
 
     def process(self, file_processing_step: FileProcessingStep) -> int:
         """
