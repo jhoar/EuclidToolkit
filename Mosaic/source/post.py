@@ -47,6 +47,48 @@ FITS_FILE_EXTENSION = '.fits'
 PNG_FILE_EXTENSION = '.png'
 """The standard PNG file name extension. Used in batch processing."""
 
+@unique
+class Instrument(Enum):
+    UNKNOWN = "unk"
+    VIS = "vis"
+    NIS = "nis"
+    NIP = "nip"
+
+@unique
+class Mode(Enum):
+    UNKNOWN = "unk"
+    SCIENCE = "sci"
+    CALIBRATION = "cal"
+
+@unique
+class Submode(Enum):
+    UNKNOWN = "unk"
+    NOMINAL = "nom"
+    SHORT = "sho"
+
+@unique
+class Variant(Enum):
+    UNKNOWN = "UNK"
+
+
+@dataclass
+class ImageType:
+    instrument: Instrument
+    mode: Mode
+    submode: Submode
+    variant: set(Variant)
+
+    def __init__(self, hdu: fits.ImageHDU):
+        """
+        """
+        self.instrument = Instrument.VIS
+        self.mode = Mode.SCIENCE
+        self.submode = Submode.NOMINAL
+
+    def getFileName(img_type: ImageType) -> str:
+        return f'{img_type.instrument.value}_{img_type.mode.value}_{img_type.submode.value}'
+
+
 def colorise(image, black, white, mid=None, blackpoint=1, whitepoint=255, midpoint=127):
     """
     Colorize grayscale image.
@@ -146,10 +188,16 @@ class ImageContainer:
 class PostProcessingConfig:
     """Post processing configuration"""
     max_threads: int
-    reduction_factor: int
-    low_color: tuple(int)
-    mid_color: tuple(int)
-    high_color: tuple(int)
+    vis_lo_res: int
+    vis_hi_res: int
+    nisp_lo_res: int
+    nisp_hi_res: int
+    sci_low_color: tuple(int)
+    sci_mid_color: tuple(int)
+    sci_high_color: tuple(int)
+    cal_low_color: tuple(int)
+    cal_mid_color: tuple(int)
+    cal_high_color: tuple(int)
     file_name: str = None
 
     def to_json(self):
@@ -230,6 +278,24 @@ class HDUList:
         with fits.open(fits_file) as hdu_list:
             return cls(hdu_list, file_name)
 
+def getColourScheme(img_type: ImageType, post_processing_config: PostProcessingConfig):
+    if img_type.mode == Mode.SCIENCE:
+        return post_processing_config.sci_low_color, post_processing_config.sci_mid_color, post_processing_config.sci_high_color
+    else:
+        return post_processing_config.cal_low_color, post_processing_config.sci_mid_color, post_processing_config.sci_high_color
+
+def getImageScale(img_type: ImageType, post_processing_config: PostProcessingConfig):
+    if img_type.instrument == Instrument.VIS:
+        return post_processing_config.vis_lo_res, post_processing_config.vis_hi_res,
+    else:
+        return post_processing_config.nisp_lo_res, post_processing_config.nisp_hi_res,
+
+def generateThumb(data, color_low, color_mid, color_high, scale, name):
+    scaled_data = downscale_local_mean(data, (scale, scale))
+    img = Image.fromarray(scaled_data).convert("L")
+    img = colorise(img, color_low, color_mid, color_high)
+    flipped = img.transpose(Image.FLIP_TOP_BOTTOM)
+    return ImageContainer(flipped, name)
 
 def thumb_hdu_list(hdu_list: HDUList, post_processing_config: PostProcessingConfig) -> list[ImageContainer]:
     """
@@ -240,18 +306,21 @@ def thumb_hdu_list(hdu_list: HDUList, post_processing_config: PostProcessingConf
     imgs = []
 
     for idx in range(1, len(hdu_list.hdu_list)):
-        logging.info(f'Processing extension {hdu_list.hdu_list[idx].name}')
-        data = downscale_local_mean(hdu_list.hdu_list[idx].data, 
-                                    (post_processing_config.reduction_factor, 
-                                    post_processing_config.reduction_factor))
-        img = Image.fromarray(data).convert("L")
-        img = colorise(img, 
-                    post_processing_config.low_color, 
-                    post_processing_config.mid_color, 
-                    post_processing_config.high_color)
-        flipped = img.transpose(Image.FLIP_TOP_BOTTOM)
 
-        imgs.append(ImageContainer(flipped, hdu_list.hdu_list[idx].name))
+        img_type = ImageType(hdu_list.hdu_list[idx])
+
+        color_low,color_mid,color_high = getColourScheme(img_type, post_processing_config)
+        lo_res,hi_res = getImageScale(img_type, post_processing_config)
+
+        logging.info(f'Processing extension {hdu_list.hdu_list[idx].name}')
+
+        prefix = img_type.getFileName()
+
+        container = generateThumb(hdu_list.hdu_list[idx].data, color_low, color_mid, color_high, lo_res, prefix + "_lo")
+        imgs.append(container)
+
+        container = generateThumb(hdu_list.hdu_list[idx].data, color_low, color_mid, color_high, hi_res, prefix + "_hi")
+        imgs.append(container)
 
     return imgs
 
