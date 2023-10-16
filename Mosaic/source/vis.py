@@ -55,11 +55,14 @@ QUADRANT_NAXIS_1 = 2128
 QUADRANT_NAXIS_2 = 2086
 """Number of samples per quadrant in Y parallel direction."""
 
-MOSAIC_NAXIS1 = 25186
+MOSAIC_NAXIS1 = 25186 
 """Number of pixels in mosaic X direction"""
 
 MOSAIC_NAXIS2 = 27966    
 """Number of pixels in mosaic Y direction"""
+
+MOSAIC_NAXIS2_MSTP = 28192 
+"""Number of pixels in mosaic Y direction for MSTP mode"""
 
 PRESCAN_X = 51
 """Number of serial   prescan  pixels."""
@@ -386,6 +389,23 @@ IMAGE_QUALITY_FILE_SUFFIX = '_image_quality'
 
 MOSAIC_FILE_SUFFIX = '_mosaic'
 """The suffix to be added before the extension to image quality diagnostic source table files."""
+
+
+@unique
+class VisMode(str, Enum):
+    NOMINAL_SHORT = 'NOMINAL/SHORT'
+    BIAS = 'BIAS'
+    BIAS_LIMITED = 'BIAS with Limited Scan'
+    CHARGE_INJECTION = 'CHARGE INJECTION'
+    DARK = 'DARK'
+    FLAT_FIELD = 'FLAT-FIELD'
+    LINEARITY = 'LINEARITY'
+    NOMINAL_SHORT_LIMITED = 'NOMINAL/SHORT with Limited Scan'
+    PARALLEL_TRAP_PUMPING = 'VERTICAL TRAP PUMPING'
+    MULTI_SERIAL_PARALLEL_TRAP_PUMPING = 'MULTI SERIAL TRAP PUMPING'
+
+def VisModeFromHdu(hdu) -> VisMode:
+    return VisMode(hdu.header['SEQID'])
 
 
 @dataclass(frozen=True)
@@ -813,7 +833,9 @@ class VisHDUList:
     """Dictionary indexing mask secondary fits extensions by quadrant"""
     file_name: str
     """The I/O file_name, when applicable"""
-
+    mode: VisMode
+    """The VIS exposure mode"""
+    
     def __init__(self, hdu_list: fits.HDUList, file_name: str = None):
         """
         :param hdu_list: the input hdu_list. It will be deep copied.
@@ -823,6 +845,8 @@ class VisHDUList:
         self.images = {}
         self.masks = {}
         self.file_name = file_name
+        self.mode = VisModeFromHdu(self.hdu_list[0])
+
         for hdu in self.hdu_list[1:]:
             # Add HDU to images dictionary, if appropriate
             try:
@@ -921,14 +945,16 @@ def min_vis_hdu_list(vis_hdu_lists: Iterable[VisHDUList]) -> VisHDUList:
 def subtract_bias_optimum_quadrant(quadrant: Quadrant, input_array: np.ndarray) -> np.ndarray:
     """
     Subtract bias from a given input array using the optimum algorithm in EUCL-ESAC-TN-3-002.
-    An error is raised in case of incorrect input geometry.
+    A warning is raised in case of incorrect input geometry.
     :param quadrant: the VIS CCD quadrant
     :param input_array: input data array
     :return: the bias subtracted numpy array. dtype=np.float32
     """
     # Geometry check
-    if input_array.shape != (QUADRANT_NAXIS_2, QUADRANT_NAXIS_1):
-        raise ValueError(f'Incorrect input array shape: {input_array.shape}')
+    if input_array.shape[0] < QUADRANT_NAXIS_2 or  input_array.shape[1] < QUADRANT_NAXIS_1:
+        ValueError(f'Incorrect input array shape: {input_array.shape}')
+    elif input_array.shape[0] > QUADRANT_NAXIS_2 or input_array.shape[1] > QUADRANT_NAXIS_1:
+        logging.warning(f'Incorrect input array shape: {input_array.shape}, maybe NOMINAL/SHORT with limited scan, data will be trimmed')
 
     # Subtract pre-scan optimum bias (individual value for each row)
     x_min, x_max = QUADRANT_TO_QUADRANT_LOCATION[quadrant].get_numpy_bias_optimum_prescan_range()
@@ -987,13 +1013,13 @@ def add_raw_data_mask(vis_hdu_list: VisHDUList):
 def trim_quadrant_data(quadrant: Quadrant, input_array: np.ndarray):
     """
     Trim a numpy array with level 1 processing geometry. Only the image area is kept.
-    An error is raised in case of incorrect input geometry.
+    A warning is raised in case of incorrect input geometry.
     :param quadrant: the VIS CCD quadrant
     :param input_array: input data array
     :return: the trimmed quadrant numpy array. Note it is a view and not a copy
     """
     if input_array.shape != (QUADRANT_NAXIS_2, QUADRANT_NAXIS_1):
-        raise ValueError(f'Incorrect input array shape: {input_array.shape}')
+        logging.warning(f'Incorrect input array shape: {input_array.shape}, maybe NOMINAL/SHORT with limited scan?')
     y_min, y_max, x_min, x_max = QUADRANT_TO_QUADRANT_LOCATION[quadrant].get_numpy_trim_range()
     return input_array[y_min:y_max, x_min:x_max]
 
@@ -1330,18 +1356,29 @@ def mosaic_vis_hdu_list(vis_hdu_list: VisHDUList) -> fits.HDUList:
     :param vis_hdu_list: the input VIS hdu_list. It will not be modified.
     """
 
-    mosaic_image = np.zeros((MOSAIC_NAXIS2, MOSAIC_NAXIS1), dtype='uint16')
+    logging.info(f'Processing type {vis_hdu_list.mode}')
+
+    if vis_hdu_list.mode == VisMode.MULTI_SERIAL_PARALLEL_TRAP_PUMPING:
+        M_NAXIS1 = MOSAIC_NAXIS1
+        M_NAXIS2 = MOSAIC_NAXIS2_MSTP
+    else:
+        M_NAXIS1 = MOSAIC_NAXIS1
+        M_NAXIS2 = MOSAIC_NAXIS2
+
+    mosaic_image = np.zeros((M_NAXIS2, MOSAIC_NAXIS1), dtype='uint16')
 
     for quadrant, hdu in vis_hdu_list.images.items():
 
         # Get the trim sizes
         y_min, _, x_min, _ = QUADRANT_TO_QUADRANT_LOCATION[quadrant].get_numpy_trim_range()
 
-        target_y_0 = int(MOSAIC_NAXIS2 / 2 - hdu.header['CRPIX2']) + y_min
-        target_x_0 = int(MOSAIC_NAXIS1 / 2 - hdu.header['CRPIX1']) + x_min
+        target_y_0 = int(M_NAXIS2 / 2 - hdu.header['CRPIX2']) + y_min
+        target_x_0 = int(M_NAXIS1 / 2 - hdu.header['CRPIX1']) + x_min
 
         target_y_1 = target_y_0 + len(hdu.data)
         target_x_1 = target_x_0 + len(hdu.data[0])
+
+        logging.info(f'{target_y_0},{target_y_1}  {target_x_0},{target_x_1}')
 
         mosaic_image[target_y_0:target_y_1, target_x_0:target_x_1] = hdu.data
 
