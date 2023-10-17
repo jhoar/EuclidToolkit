@@ -1378,8 +1378,6 @@ def mosaic_vis_hdu_list(vis_hdu_list: VisHDUList) -> fits.HDUList:
         target_y_1 = target_y_0 + len(hdu.data)
         target_x_1 = target_x_0 + len(hdu.data[0])
 
-        logging.info(f'{target_y_0},{target_y_1}  {target_x_0},{target_x_1}')
-
         mosaic_image[target_y_0:target_y_1, target_x_0:target_x_1] = hdu.data
 
         hdu_list = fits.HDUList(fits.PrimaryHDU(header=vis_hdu_list.hdu_list[0].header))
