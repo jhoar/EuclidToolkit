@@ -403,6 +403,7 @@ class VisMode(str, Enum):
     NOMINAL_SHORT_LIMITED = 'NOMINAL/SHORT with Limited Scan'
     PARALLEL_TRAP_PUMPING = 'VERTICAL TRAP PUMPING'
     MULTI_SERIAL_PARALLEL_TRAP_PUMPING = 'MULTI SERIAL TRAP PUMPING'
+    SIMULATED = 'SIMULATED'
 
 def VisModeFromHdu(hdu) -> VisMode:
     return VisMode(hdu.header['SEQID'])
