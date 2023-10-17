@@ -4,12 +4,12 @@
     "vis_hi_res": 5,
     "nisp_lo_res": 35,
     "nisp_hi_res": 3,
-    "sci_low_color": [49,54,149], 
-    "sci_mid_color": [165,0,38], 
-    "sci_high_color": [254,238,166],
-    "cal_low_color": [49,149,54], 
-    "cal_mid_color": [0,165,38], 
-    "cal_high_color": [238,166,254],
+    "sci_low_color": [16,101,171], 
+    "sci_mid_color": [254,238,166], 
+    "sci_high_color": [179,21,41],
+    "cal_low_color": [27,121,57], 
+    "cal_mid_color": [166,254,238], 
+    "cal_high_color": [116,40,129],
     "file_name": null
 }
 

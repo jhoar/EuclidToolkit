@@ -48,45 +48,43 @@ PNG_FILE_EXTENSION = '.png'
 """The standard PNG file name extension. Used in batch processing."""
 
 @unique
-class Instrument(Enum):
-    UNKNOWN = "unk"
-    VIS = "vis"
-    NIS = "nis"
-    NIP = "nip"
+class Instrument(str, Enum):
+    VIS = 'VIS'
+    NISP = 'NISP'
 
 @unique
-class Mode(Enum):
-    UNKNOWN = "unk"
-    SCIENCE = "sci"
-    CALIBRATION = "cal"
+class Category(str, Enum):
+    SCIENCE = 'SCIENCE'
+    CALIBRATION = 'CALIB'
+    TECHNICAL = 'TECHNICAL'
 
 @unique
-class Submode(Enum):
-    UNKNOWN = "unk"
-    NOMINAL = "nom"
-    SHORT = "sho"
-
-@unique
-class Variant(Enum):
-    UNKNOWN = "UNK"
-
+class Mode(str, Enum):
+    NOMINAL_SHORT = 'NOMINAL/SHORT'
+    BIAS = 'BIAS'
+    BIAS_LIMITED = 'BIAS with Limited Scan'
+    CHARGE_INJECTION = 'CHARGE INJECTION'
+    DARK = 'DARK'
+    FLAT_FIELD = 'FLAT-FIELD'
+    LINEARITY = 'LINEARITY'
+    NOMINAL_SHORT_LIMITED = 'NOMINAL/SHORT with Limited Scan'
+    PARALLEL_TRAP_PUMPING = 'VERTICAL TRAP PUMPING'
+    MULTI_SERIAL_PARALLEL_TRAP_PUMPING = 'MULTI SERIAL TRAP PUMPING'
 
 @dataclass
 class ImageType:
     instrument: Instrument
+    category: Category
     mode: Mode
-    submode: Submode
-    variant: set(Variant)
 
-    def __init__(self, hdu: fits.ImageHDU):
-        """
-        """
-        self.instrument = Instrument.VIS
-        self.mode = Mode.SCIENCE
-        self.submode = Submode.NOMINAL
+    def __init__(self, hdu):
+        self.instrument = Instrument(hdu.header['INSTRUME'])
+        self.category = Category(hdu.header['IMG_CAT'])
+        self.mode = Mode(hdu.header['SEQID'])
 
     def getFileName(img_type: ImageType) -> str:
-        return f'{img_type.instrument.value}_{img_type.mode.value}_{img_type.submode.value}'
+        mode = img_type.mode.value.replace(" ", "-").replace("/", "-")
+        return f'{img_type.instrument.value.lower()}_{img_type.category.value.lower()}_{mode.lower()}'
 
 
 def colorise(image, black, white, mid=None, blackpoint=1, whitepoint=255, midpoint=127):
@@ -279,10 +277,10 @@ class HDUList:
             return cls(hdu_list, file_name)
 
 def getColourScheme(img_type: ImageType, post_processing_config: PostProcessingConfig):
-    if img_type.mode == Mode.SCIENCE:
+    if img_type.category == Category.SCIENCE:
         return post_processing_config.sci_low_color, post_processing_config.sci_mid_color, post_processing_config.sci_high_color
     else:
-        return post_processing_config.cal_low_color, post_processing_config.sci_mid_color, post_processing_config.sci_high_color
+        return post_processing_config.cal_low_color, post_processing_config.cal_mid_color, post_processing_config.cal_high_color
 
 def getImageScale(img_type: ImageType, post_processing_config: PostProcessingConfig):
     if img_type.instrument == Instrument.VIS:
@@ -293,7 +291,7 @@ def getImageScale(img_type: ImageType, post_processing_config: PostProcessingCon
 def generateThumb(data, color_low, color_mid, color_high, scale, name):
     scaled_data = downscale_local_mean(data, (scale, scale))
     img = Image.fromarray(scaled_data).convert("L")
-    img = colorise(img, color_low, color_mid, color_high)
+    img = colorise(img, color_low, color_high, color_mid)
     flipped = img.transpose(Image.FLIP_TOP_BOTTOM)
     return ImageContainer(flipped, name)
 
@@ -305,9 +303,9 @@ def thumb_hdu_list(hdu_list: HDUList, post_processing_config: PostProcessingConf
 
     imgs = []
 
-    for idx in range(1, len(hdu_list.hdu_list)):
+    img_type = ImageType(hdu_list.hdu_list[0])
 
-        img_type = ImageType(hdu_list.hdu_list[idx])
+    for idx in range(1, len(hdu_list.hdu_list)):
 
         color_low,color_mid,color_high = getColourScheme(img_type, post_processing_config)
         lo_res,hi_res = getImageScale(img_type, post_processing_config)
@@ -316,11 +314,19 @@ def thumb_hdu_list(hdu_list: HDUList, post_processing_config: PostProcessingConf
 
         prefix = img_type.getFileName()
 
-        container = generateThumb(hdu_list.hdu_list[idx].data, color_low, color_mid, color_high, lo_res, prefix + "_lo")
-        imgs.append(container)
+        # Rescale array and convert to grayscale image
+        scaled_data = downscale_local_mean(hdu_list.hdu_list[idx].data, (hi_res, hi_res))
+        hi_res_data = Image.fromarray(scaled_data).convert("L")
 
-        container = generateThumb(hdu_list.hdu_list[idx].data, color_low, color_mid, color_high, hi_res, prefix + "_hi")
-        imgs.append(container)
+        # Colourise image and flip to correct orientation
+        hi_res_color = colorise(hi_res_data, color_low, color_high, color_mid)
+        flipped = hi_res_color.transpose(Image.FLIP_TOP_BOTTOM)
+
+        # Rescale to lo res image
+        lo_res_color = ImageOps.scale(flipped, 0.05)
+
+        imgs.append(ImageContainer(flipped, prefix + "_hi"))
+        imgs.append(ImageContainer(lo_res_color, prefix + "_lo"))
 
     return imgs
 
