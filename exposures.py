@@ -21,11 +21,7 @@ import matplotlib.pylab as pylab
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 
-
-
-
-
-def plot(name: str, pairs: list[list[str]]):
+def plot4x3(name: str, pairs: list[list[str]]):
 
     params = {
         'axes.labelsize': 'x-small',
@@ -50,6 +46,40 @@ def plot(name: str, pairs: list[list[str]]):
         axs[plotnum].scatter(t, s[n], s=size, label=n)
         axs[plotnum].legend(loc="upper right")
         axs[plotnum].grid()
+
+    plt.savefig(name, format='png', dpi=300)
+    plt.close()
+
+
+
+
+def plotxyz(name: str, axes):
+
+    params = {
+        'axes.labelsize': 'x-small',
+        'figure.titlesize': 'x-small', 
+        'axes.titlesize':'x-small',
+        'ytick.labelsize': 'x-small',
+        'xtick.labelsize': 'x-small',
+        'legend.fontsize': 'x-small'
+        }
+
+    pylab.rcParams.update(params)
+    plt.clf()
+
+    nSeries = len(axes)
+    fig, axs = plt.subplots(nSeries, 1, sharex='all')
+    fig.suptitle(str(len(axes[0][0])) + ' samples')
+    for plotnum in range(0, len(axes)):
+        for series in range(0, len(axes[plotnum])):
+            param = axes[plotnum][series]
+            t = param[0]
+            s = param[1]
+            n = param[2]
+            size = np.full(len(t), 1)
+            axs[plotnum].scatter(t, s[n], s=size, label=n)
+            axs[plotnum].legend(loc="upper right")
+            axs[plotnum].grid()
 
     plt.savefig(name, format='png', dpi=300)
     plt.close()
@@ -189,27 +219,17 @@ def createPlots(in_dir: str, glob: str) -> None:
             qTime = Time(q_off['POSIX'].astype(float) / 1000.0, format='unix_tai')
 
             plot('plots/' + str(path.name) + '_X.png', 
-                 (
+                ((
                     (qTime.mjd, q_off, 'DELTA_Q_X'), 
-                    (fgkfTime.mjd, fgkf, 'FGKF_X'),
-                    (conTime.mjd, con, 'CONT_ERR_X') 
-                 )
-            )
-
-            plot('plots/' + str(path.name) + '_Y.png', 
-                 (
+                    (fgkfTime.mjd, fgkf, 'FGKF_X')                 ),
+                (
                     (qTime.mjd, q_off, 'DELTA_Q_Y'), 
-                    (fgkfTime.mjd, fgkf, 'FGKF_Y'),
-                    (conTime.mjd, con, 'CONT_ERR_Y') 
-                 )
-            )
-
-            plot('plots/' + str(path.name) + '_Z.png', 
-                 (
+                    (fgkfTime.mjd, fgkf, 'FGKF_Y') 
+                ),
+                (
                     (qTime.mjd, q_off, 'DELTA_Q_Z'), 
-                    (fgkfTime.mjd, fgkf, 'FGKF_Z'),
-                    (conTime.mjd, con, 'CONT_ERR_Z') 
-                 )
+                    (fgkfTime.mjd, fgkf, 'FGKF_Z') 
+                ))
             )
 
             sub = lambda x, y: x - y
@@ -306,7 +326,7 @@ def createPlots(in_dir: str, glob: str) -> None:
             axs[3,2].scatter(diffTime.mjd, Z_DIFF['RESULT'], s=diff_z_s, label='δQ(Z)-CON(Z)')
             axs[3,2].legend(loc="upper right")
 
-            plt.savefig('plots/' + name, format='png', dpi=300)
+            # plt.savefig('plots/' + name, format='png', dpi=300)
 
             plt.close()
 
