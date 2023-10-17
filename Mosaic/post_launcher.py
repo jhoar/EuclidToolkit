@@ -19,7 +19,8 @@ parser.add_argument('aux', help='the auxiliary and configuration files folder')
 parser.add_argument('-s', '--step', help='Post-processing step',
                     action='append', required=True)
 parser.add_argument('-p', '--prefix', help='File prefix to be processed (without folder path)',
-                    action='append', required=True)
+                    action='append')
+parser.add_argument('-P', '--Prefix', help='File containing list of prefixes to be processed')
 parser.add_argument('-c', '--config', help='configuration file superseeding the default',
                     default=default_post_config)
 parser.add_argument('-d', '--delete', help='delete the output folder before execution',
@@ -41,12 +42,21 @@ steps_string = '['
 for step in args.step:
     steps_string += f'"{step}",'
 steps_string += ']'
+
 prefixes_string = '['
-for prefix in args.prefix:
-    prefixes_string += f'"{prefix}",'
+
+if args.Prefix:
+    with open(str(args.Prefix), 'r') as input_file:
+        for line in input_file.readlines():
+            if line[0] != '#':
+                prefixes_string += f'"{line.strip()}",'        
+elif args.prefix:
+    for prefix in args.prefix:
+        prefixes_string += f'"{prefix}",'
+else:
+    logging.critical('No file prefixes specified')
+
 prefixes_string += ']'
-#print(f'{steps_string} {prefixes_string}')
-#exit()
 
 # Remove and/or create output folder, if needed
 if args.delete and os.path.exists(args.output):
