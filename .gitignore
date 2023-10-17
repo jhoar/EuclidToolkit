@@ -12,5 +12,7 @@ NOK
 data
 Mosaic/input
 Mosaic/output
+Mosaic/input.old
+Mosaic/output.old
 Mosaic/auxiliary/*fits
 __pycache__/
