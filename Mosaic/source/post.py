@@ -390,7 +390,7 @@ class PostProcessor:
         if self.write_output_files:
             for image_container in output_images:
                 output_file = os.path.join(
-                    self.output_folder, f'{self.prefix}_{image_container.name}{PNG_FILE_EXTENSION}')
+                    self.output_folder, f'{self.prefix[22:37]}_{image_container.name}{PNG_FILE_EXTENSION}')
 
                 image_container.image.save(output_file, overwrite=True)
 
