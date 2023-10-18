@@ -282,11 +282,11 @@ def getColourScheme(img_type: ImageType, post_processing_config: PostProcessingC
     else:
         return post_processing_config.cal_low_color, post_processing_config.cal_mid_color, post_processing_config.cal_high_color
 
-def getImageScale(img_type: ImageType, post_processing_config: PostProcessingConfig):
+def getImageScale(img_type: ImageType, post_processing_config: PostProcessingConfig) -> int:
     if img_type.instrument == Instrument.VIS:
-        return post_processing_config.vis_lo_res, post_processing_config.vis_hi_res,
+        return post_processing_config.vis_image_scale
     else:
-        return post_processing_config.nisp_lo_res, post_processing_config.nisp_hi_res,
+        return post_processing_config.nisp_image_scale
 
 def generateThumb(data, color_low, color_mid, color_high, scale, name):
     scaled_data = downscale_local_mean(data, (scale, scale))
@@ -302,20 +302,19 @@ def thumb_hdu_list(hdu_list: HDUList, post_processing_config: PostProcessingConf
     """
 
     imgs = []
-
     img_type = ImageType(hdu_list.hdu_list[0])
 
     for idx in range(1, len(hdu_list.hdu_list)):
 
         color_low,color_mid,color_high = getColourScheme(img_type, post_processing_config)
-        lo_res,hi_res = getImageScale(img_type, post_processing_config)
+        image_scale = getImageScale(img_type, post_processing_config)
 
         logging.info(f'Processing extension {hdu_list.hdu_list[idx].name}')
 
         prefix = img_type.getFileName()
 
         # Rescale array and convert to grayscale image
-        scaled_data = downscale_local_mean(hdu_list.hdu_list[idx].data, (hi_res, hi_res))
+        scaled_data = downscale_local_mean(hdu_list.hdu_list[idx].data, (image_scale, image_scale))
         hi_res_data = Image.fromarray(scaled_data).convert("L")
 
         # Colourise image and flip to correct orientation
