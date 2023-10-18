@@ -186,10 +186,8 @@ class ImageContainer:
 class PostProcessingConfig:
     """Post processing configuration"""
     max_threads: int
-    vis_lo_res: int
-    vis_hi_res: int
-    nisp_lo_res: int
-    nisp_hi_res: int
+    vis_image_scale: int
+    nisp_image_scale: int
     sci_low_color: tuple(int)
     sci_mid_color: tuple(int)
     sci_high_color: tuple(int)
