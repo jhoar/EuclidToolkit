@@ -31,7 +31,7 @@ args = parser.parse_args()
 
 # Verify all processing steps are valid. Exit if not
 valid_file_processing_steps = {
-    'THUMB'
+    'THUMB', 'META'
 }
 if not valid_file_processing_steps.issuperset(args.step):
     exit_string = f'Invalid processing steps: {set(args.step).difference(valid_file_processing_steps)}'

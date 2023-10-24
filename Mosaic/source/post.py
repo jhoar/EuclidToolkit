@@ -47,6 +47,12 @@ FITS_FILE_EXTENSION = '.fits'
 PNG_FILE_EXTENSION = '.png'
 """The standard PNG file name extension. Used in batch processing."""
 
+JPG_FILE_EXTENSION = '.jpg'
+"""The standard JPEG file name extension. Used in batch processing."""
+
+JSON_FILE_EXTENSION = '.json'
+"""JSON file extension"""
+
 @unique
 class Instrument(str, Enum):
     VIS = 'VIS'
@@ -181,6 +187,17 @@ class ImageContainer:
     """The PIL image object"""
     name: str
     """(partial) name of the Image"""
+
+
+@dataclass
+class TextContainer:
+    """Handles text files"""
+
+    content: str
+    """The PIL image object"""
+    name: str
+    """(partial) name of the Image"""
+
 
 @dataclass
 class PostProcessingConfig:
@@ -319,13 +336,38 @@ def thumb_hdu_list(hdu_list: HDUList, post_processing_config: PostProcessingConf
         hi_res_color = colorise(hi_res_data, color_low, color_high, color_mid)
         flipped = hi_res_color.transpose(Image.FLIP_TOP_BOTTOM)
 
-        # Rescale to lo res image
-        lo_res_color = ImageOps.scale(flipped, 0.05)
-
-        imgs.append(ImageContainer(flipped, prefix + "_hi"))
-        imgs.append(ImageContainer(lo_res_color, prefix + "_lo"))
+        imgs.append(ImageContainer(flipped, prefix))
 
     return imgs
+
+
+def meta_hdu_list(hdu_list: HDUList, post_processing_config: PostProcessingConfig) -> list[TextContainer]:
+    """
+    Generate the metadata
+    :param hdu_list: the input hdu_list. It will not be modified.
+    """
+
+    metadata = []
+    img_type = ImageType(hdu_list.hdu_list[0])
+
+    for idx in range(1, len(hdu_list.hdu_list)):
+
+        logging.info(f'Processing extension {hdu_list.hdu_list[idx].name}')
+
+        prefix = img_type.getFileName()
+
+        exposure = hdu_list.hdu_list[0].header['EXPTIME']
+
+        json = """
+{
+    "exposure": %(0)s
+}
+""" % {'0': exposure}
+
+
+        metadata.append(TextContainer(json, prefix))
+
+    return metadata
 
 
 @unique
@@ -333,6 +375,7 @@ class FileProcessingStep(Enum):
     """ Defines the file processing steps and the associated file suffixes, when appropriate."""
     # TODO Use or remove values?
     THUMB = auto()
+    META = auto()
 
 
 @dataclass()
@@ -377,6 +420,8 @@ class PostProcessor:
         now = time.time_ns()
         if file_processing_step is FileProcessingStep.THUMB:
             self._hdu_list_from_fits(self.output_folder)
+        elif file_processing_step is FileProcessingStep.META:
+            self._hdu_list_from_fits(self.output_folder)
         else:
             raise TypeError(f'Unsupported file processing step: {file_processing_step}')
         return time.time_ns() - now
@@ -387,10 +432,21 @@ class PostProcessor:
         if self.write_output_files:
             for image_container in output_images:
                 output_file = os.path.join(
-                    self.output_folder, f'{self.prefix[22:37]}_{image_container.name}{PNG_FILE_EXTENSION}')
+                    self.output_folder, f'{self.prefix[22:37]}_{image_container.name}{JPG_FILE_EXTENSION}')
 
                 image_container.image.save(output_file, overwrite=True)
 
+
+    def _meta(self):
+        output_metadata = meta_hdu_list(self.vis_hdu_list, self.post_processing_config)
+
+        if self.write_output_files:
+            for md_file in output_metadata:
+                output_file = os.path.join(
+                    self.output_folder, f'{self.prefix[22:37]}_{md_file.name}{JSON_FILE_EXTENSION}')
+                
+                with open(output_file, "w") as outfile:
+                    outfile.write(md_file.content)
 
 
     def process(self, file_processing_step: FileProcessingStep) -> int:
@@ -402,6 +458,8 @@ class PostProcessor:
         now = time.time_ns()
         if file_processing_step is FileProcessingStep.THUMB:
             self._thumb()
+        elif file_processing_step is FileProcessingStep.META:
+            self._meta()
         else:
             raise TypeError(f'Unsupported file processing step: {file_processing_step}')
         return time.time_ns() - now
