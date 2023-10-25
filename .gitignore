@@ -15,4 +15,6 @@ Mosaic/output
 Mosaic/input.old
 Mosaic/output.old
 Mosaic/auxiliary/*fits
-__pycache__/
+**/__pycache__/
+**/.ipynb_checkpoints
+tmp
