@@ -52,7 +52,9 @@ JPG_FILE_EXTENSION = '.jpg'
 
 JSON_FILE_EXTENSION = '.json'
 """JSON file extension"""
+
 MOSAIC_FILE_SUFFIX = '_mosaic'
+"""Mosaic file suffix"""
 
 @unique
 class Instrument(str, Enum):
@@ -341,7 +343,6 @@ def thumb_hdu_list(hdu_list: HDUList, post_processing_config: PostProcessingConf
 
     return imgs
 
-
 def meta_hdu_list(hdu_list: HDUList, post_processing_config: PostProcessingConfig) -> list[TextContainer]:
     """
     Generate the metadata
@@ -356,14 +357,17 @@ def meta_hdu_list(hdu_list: HDUList, post_processing_config: PostProcessingConfi
         logging.info(f'Processing extension {hdu_list.hdu_list[idx].name}')
 
         prefix = img_type.getFileName()
-
         exposure = hdu_list.hdu_list[0].header['EXPTIME']
+        seqid = hdu_list.hdu_list[0].header['SEQID']
+        obsdate = hdu_list.hdu_list[0].header['DATE-OBS'][0:19]
 
         json = """
 {
-    "exposure": %(0)s
+    "exposure": %(0)s,
+    "sequence": "%(1)s",
+    "obsdate": "%(2)s"
 }
-""" % {'0': exposure}
+""" % {'0': exposure, '1': seqid, '2': obsdate}
 
 
         metadata.append(TextContainer(json, prefix))
@@ -393,9 +397,7 @@ class PostProcessor:
     prefix: str = None
     """The prefix common for all fits files associated with a given Level 1 frame"""
     hdu_list: HDUList = None
-    """
-    Processing buffer for different processing modules. A level 1 frame, an average of them or a CCD processed output
-    """
+    """Processing buffer for different processing modules. A level 1 frame, an average of them or a CCD processed output"""
     post_processing_config: PostProcessingConfig = None
     write_output_files: bool = True
     """If False, do not write files to disk"""
