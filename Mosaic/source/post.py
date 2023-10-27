@@ -52,6 +52,7 @@ JPG_FILE_EXTENSION = '.jpg'
 
 JSON_FILE_EXTENSION = '.json'
 """JSON file extension"""
+MOSAIC_FILE_SUFFIX = '_mosaic'
 
 @unique
 class Instrument(str, Enum):
@@ -507,7 +508,7 @@ def post_process(input_folder, output_folder, prefixes: Iterable[str],
     # Loop on prefixes and processing steps
     n_prefixes = len(prefixes)
     for i, prefix in enumerate(prefixes):
-        post_processor.prefix = prefix
+        post_processor.prefix = prefix + MOSAIC_FILE_SUFFIX
         logging.info(f'Processing file name prefix {i + 1} out of {n_prefixes}: {post_processor.prefix}')
         for j, file_processing_step in enumerate(file_processing_steps):
             if j == 0:
