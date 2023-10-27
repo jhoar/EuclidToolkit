@@ -9,6 +9,7 @@ import os
 import numpy as np
 import shortuuid
 import json
+import string
 
 from numpy import str_
 
@@ -155,31 +156,6 @@ def _create_tabs(
 
     return html
 
-def nametotype(name: str) -> str:
-    n: str
-    if 'nominal-short_with_limited_scan' in name:
-        n = 'Nominal/Short (limited scan)'
-    if 'nominal-short' in name:
-        n = 'Nominal/Short'
-    if 'bias_with_limited_scan' in name:
-        n = 'Bias (limited scan)'
-    if 'bias' in name:
-        n = 'Bias'
-    if 'charge_injection' in name:
-        n = 'Charge Injection'
-    if 'dark' in name:
-        n = 'Dark'
-    if 'flat-field' in name:
-        n = 'Flat'
-    if 'linearity' in name:
-        n = 'Linearity'
-    if 'vertical_trap_pumping' in name:
-        n = 'Vertical Trap Pumping'
-    if 'multi_serial_trap_pumping' in name:
-        n = 'M-S Trap Pumping'    
-    return n
-    
-
 def _create_tabs_euclid(
         euclid_images: Sequence[EuclidData],
         max_imgs_per_tab: int = 30,
@@ -215,21 +191,10 @@ def _create_tabs_euclid(
 
     for edata in euclid_images:
 
-        mdata = []
-        
-        image_type = str(nametotype(edata.image))
-        mdata.append(image_type)
-        
-        with open(edata.metadata, 'r') as f:
-            data = json.load(f)
-            mdata.append('(' + str(data['exposure']) + 's)')
-            
-        mdata_text = " ".join(mdata)
-            
         for label in edata.labels:
-            images.append(edata.image)
+            images.append(edata.image.replace("\\", "/"))
             labels.append(label)
-            metadata.append(mdata_text)
+            metadata.append(edata.metadata.replace("\\", "/"))
             
     images = _seq2arr(images)
     labels = np.asarray(labels)
@@ -515,6 +480,15 @@ def _create_img_euclid(
     img_uuid = shortuuid.uuid()
     img_html = ''
 
+    selected_metadata = []
+    with open(metadata, 'r') as f:
+        json_dict = json.load(f)
+        selected_metadata.append(string.capwords(json_dict['sequence']))
+        selected_metadata.append('(' + str(json_dict['exposure']) + 's)')
+        selected_metadata.append(str(json_dict['obsdate']))
+
+    selected_metadata = " ".join(selected_metadata)
+
     if type(image) is str or type(image) is str_:
         # if image url is local path convert to relative path
         matches = ['http:', 'https:', 'ftp:', 'www.', 'data:', 'file:']
@@ -526,7 +500,7 @@ def _create_img_euclid(
     html = """
     <div class="euclidgrid-placeholder-div-%(0)s">
         <div class="euclidgrid-content-div-%(0)s">
-            <h4 style="font-size: 12px; word-wrap: break-word;">%(2)s</h4>
+            <h4 style="font-size: 12px; word-wrap: break-word;">%(2)s <a href="%(4)s" target="_blank">info</a></h4>
         </div>
         <div id="euclidgrid-content-div-%(0)s-%(1)s" class="euclidgrid-content-div-%(0)s">
             %(3)s
@@ -536,9 +510,10 @@ def _create_img_euclid(
             <a href="#euclidgrid-content-div-%(0)s-%(1)s">
                 <span class="euclidgrid-img-expand"/>
             </a>
+
         </div>
     </div>
-    """ % {'0': grid_style_uuid, '1': img_uuid, '2': metadata, '3': img_html}  # NOQA E501
+    """ % {'0': grid_style_uuid, '1': img_uuid, '2': selected_metadata, '3': img_html, '4': metadata }  # NOQA E501
     return html
 
 
@@ -622,7 +597,7 @@ def _create_imgs_grid(
 def _create_imgs_grid_euclid(
         images: Sequence[str],
         labels: Sequence[str],
-        metadata: Sequence[str],
+        metadata: Sequence[dict],
         max_images: int = 30,
         img_width: int = 150):
     """
